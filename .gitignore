@@ -1,0 +1,11 @@
+config.json
+names.txt
+downloads/
+图片/
+__pycache__/
+*.pyc
+.venv/
+*.log
+启动日志.txt
+*.tmp
+(3
