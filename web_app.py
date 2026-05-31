@@ -7,6 +7,8 @@ from __future__ import annotations
 import os
 import re
 import socket
+import subprocess
+import sys
 import threading
 import webbrowser
 from pathlib import Path
@@ -320,6 +322,8 @@ def api_open_download_folder() -> Any:
         download_dir.mkdir(parents=True, exist_ok=True)
         if os.name == "nt":
             os.startfile(download_dir)  # type: ignore[attr-defined]
+        elif sys.platform == "darwin":
+            subprocess.run(["open", str(download_dir)], check=False)
         else:
             webbrowser.open(download_dir.as_uri())
         return jsonify({"ok": True, "path": str(download_dir)})

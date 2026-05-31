@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import platform
 import subprocess
 import time
 import webbrowser
@@ -48,18 +49,30 @@ def read_baidu_cookies_from_system() -> str | None:
 
 def open_pan_in_browser() -> None:
     """尽量用 Edge 打开（便于读取 Cookie），否则用系统默认浏览器"""
-    edge_paths = [
-        Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"),
-        Path(r"C:\Program Files\Microsoft\Edge\Application\msedge.exe"),
-    ]
-    for edge in edge_paths:
-        if edge.exists():
-            subprocess.Popen(
-                [str(edge), PAN_URL],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-            return
+    if platform.system() == "Darwin":
+        for app_name in ("Microsoft Edge", "Google Chrome"):
+            try:
+                subprocess.Popen(
+                    ["open", "-a", app_name, PAN_URL],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                )
+                return
+            except Exception:
+                continue
+    else:
+        edge_paths = [
+            Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"),
+            Path(r"C:\Program Files\Microsoft\Edge\Application\msedge.exe"),
+        ]
+        for edge in edge_paths:
+            if edge.exists():
+                subprocess.Popen(
+                    [str(edge), PAN_URL],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                )
+                return
     webbrowser.open(PAN_URL)
 
 
